@@ -1,26 +1,7 @@
 # RemoteFileProxy
 
-TODO: Write a gem description
-
-## Installation
-
-Add this line to your application's Gemfile:
-
-```ruby
-gem 'remote_file_proxy'
-```
-
-And then execute:
-
-    $ bundle
-
-Or install it yourself as:
-
-    $ gem install remote_file_proxy
-
-## Usage
-
-TODO: Write usage instructions here
+Client side proxy object for File, for use with the distributed file system written for
+TCD's CS4032 2014/2015 final assignment,
 
 ## Contributing
 
