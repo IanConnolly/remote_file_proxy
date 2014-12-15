@@ -1,7 +1,13 @@
-require "remote_file_proxy/version"
+require 'remote_file_proxy/version'
+require 'remote_file_proxy/api'
+require 'socket'
 
 module RemoteFileProxy
   class RFile
+
+    @@temp_folder = File.expand_path("~/.rfile/")
+    @@host = "localhost"
+    @@port = "45678"
 
   	UNIMPLEMENTED = [:blockdev?, :chardev?, :chown, :ctime, :expand_path,
   					 :lchown, :link, :mtime, :pipe?, :realdirpath, :realpath,
@@ -11,11 +17,21 @@ module RemoteFileProxy
       raise NoMethodError unless File.public_methods.include? method_sym
       raise NotImplementedError if UNIMPLEMENTED.include? method_sym
 
-      # set up connection to the filesystem
-      # find the file
-      # pull it to client disk in temp folder
-      # call File's underlying method, but alter the filename arg
+      unless File.directory? @@temp_folder
+        Dir.mkdir @@temp_folder
+      end
+
+      #server = RemoteFileProxy::API.new @@host, @@port
+      filename = args[0] # not strictly true, but let's work with it
+      #filepath = server.get_file filename, @@temp_folder # TODO: caching
+      #args[0] = filepath
+      
       File.send method_sym, *args, &block
     end
+
+    def self.destroy_cache!
+      FileUtils.rm_rf(Dir.glob(File.join(@@temp_folder, "*")))
+    end
+
   end
 end
