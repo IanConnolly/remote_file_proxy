@@ -9,7 +9,6 @@ class APITest < Minitest::Unit::TestCase
   def setup
     @mocked_socket = Minitest::Mock.new
     @file_size = 7
-    @mocked_socket.expect(:recv, 'thisis7B', [@file_size])
   end
 
   def test_error
@@ -21,10 +20,13 @@ class APITest < Minitest::Unit::TestCase
         api.get_file "notimportant", "/usr"
       end 
     end
+
+    @mocked_socket.verify
   end
 
   def test_file_recv
     @mocked_socket.expect(:gets, "FILE CONTENT-LENGTH=#{@file_size}\n", [])
+    @mocked_socket.expect(:recv, 'thisis7B', [@file_size])
 
     file = Minitest::Mock.new
     file.expect(:write, nil, ['thisis7B'])
@@ -39,6 +41,8 @@ class APITest < Minitest::Unit::TestCase
         file.verify
       end
     end
+
+    @mocked_socket.verify
   end
 
 end
