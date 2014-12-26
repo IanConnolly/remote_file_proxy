@@ -37,6 +37,7 @@ module RemoteFileProxy
       unless @md5_before == md5_after
         server = RemoteFileProxy::API.new @host, @port
         server.write_file @filename, Pathname.new(@filepath).dirname
+        server.close
       end
     end
 
@@ -69,7 +70,7 @@ module RemoteFileProxy
       end
 
       server = RemoteFileProxy::API.new @@host, @@port
-      filename = args[0] # not strictly true, but let's work with it
+      filename = args[0]
 
       begin
         filepath = server.get_file filename, @@temp_folder # TODO: caching
