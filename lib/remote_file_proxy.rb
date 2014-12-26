@@ -60,6 +60,12 @@ module RemoteFileProxy
   					 :lchown, :link, :mtime, :pipe?, :realdirpath, :realpath,
   					 :socket?, :symlink, :utime]
 
+
+    def self.config!(host, port)
+      @@host = host
+      @@port = port
+    end
+
     def self.method_missing(method_sym, *args, &block)
       raise NoMethodError unless File.public_methods.include? method_sym
       raise NotImplementedError if UNIMPLEMENTED.include? method_sym
