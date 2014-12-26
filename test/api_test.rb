@@ -14,7 +14,7 @@ class APITest < Minitest::Unit::TestCase
   def test_error
     @mocked_socket.expect(:gets, "ERROR MESSAGE=test\n", [])
 
-    TCPServer.stub :new, @mocked_socket do
+    TCPSocket.stub :new, @mocked_socket do
       api = RemoteFileProxy::API.new "host", 90
       assert_raises RemoteFileProxy::APIError do
         api.get_file "notimportant", "/usr"
@@ -33,7 +33,7 @@ class APITest < Minitest::Unit::TestCase
     file.expect(:close, nil, [])
 
 
-    TCPServer.stub :new, @mocked_socket do
+    TCPSocket.stub :new, @mocked_socket do
       api = RemoteFileProxy::API.new "host", 90
       File.stub :open, file do
         new_filename = api.get_file "file", "folder"

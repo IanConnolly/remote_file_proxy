@@ -21,12 +21,19 @@ module RemoteFileProxy
         Dir.mkdir @@temp_folder
       end
 
-      #server = RemoteFileProxy::API.new @@host, @@port
+      server = RemoteFileProxy::API.new @@host, @@port
       filename = args[0] # not strictly true, but let's work with it
-      #filepath = server.get_file filename, @@temp_folder # TODO: caching
-      #args[0] = filepath
+      filepath = server.get_file filename, @@temp_folder # TODO: caching
+      md5_before = Digest::MD5.file(filepath).hexdigest 
+      args[0] = filepath
       
       File.send method_sym, *args, &block
+      
+      md5_after = Digest::MD5.file(filepath).hexdigest
+
+      unless md5_before == md5_after
+        server.write_file filename, @@temp_folder
+      end
     end
 
     def self.destroy_cache!
