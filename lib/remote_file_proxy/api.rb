@@ -25,9 +25,9 @@ module RemoteFileProxy
       end
 
       content_length = header.split()[1].split('=')[1]
-      file_contents = @server.recv(content_length.to_i)
+      file_contents = @server.read content_length.to_i
       
-      new_filename = File.join(folder, filename.hash)
+      new_filename = File.join(folder, Digest::MD5.hexdigest(filename))
 
       f = File.open(new_filename, "w")
       f.write file_contents
@@ -37,11 +37,11 @@ module RemoteFileProxy
     end
 
     def write_file(filename, folder)
-      filepath = File.join(folder, filename.hash)
+      filepath = File.join(folder, Digest::MD5.hexdigest(filename))
       file_contents = File.read filepath
       file_length = File.size filepath
       @server.puts "WRITE NAME=#{filename} CONTENT_LENGTH=#{file_length}"
-      @server.puts file_contents
+      @server.write file_contents
     end
 
   end
