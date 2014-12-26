@@ -37,7 +37,6 @@ module RemoteFileProxy
       unless @md5_before == md5_after
         server = RemoteFileProxy::API.new @host, @port
         server.write_file @filename, Pathname.new(@filepath).dirname
-        server.close
       end
     end
 
@@ -55,7 +54,7 @@ module RemoteFileProxy
 
     @@temp_folder = File.expand_path("~/.rfile/")
     @@host = "localhost"
-    @@port = "45678"
+    @@port = "50000"
 
   	UNIMPLEMENTED = [:blockdev?, :chardev?, :chown, :ctime, :expand_path,
   					 :lchown, :link, :mtime, :pipe?, :realdirpath, :realpath,
